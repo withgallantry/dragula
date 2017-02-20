@@ -39,6 +39,7 @@ function dragula (initialContainers, options) {
   if (o.direction === void 0) { o.direction = 'vertical'; }
   if (o.ignoreInputTextSelection === void 0) { o.ignoreInputTextSelection = true; }
   if (o.mirrorContainer === void 0) { o.mirrorContainer = doc.body; }
+  if (o.createMirror === void 0) { o.createMirror = createDefaultMirrorImage; }
 
   var drake = emitter({
     containers: o.containers,
@@ -423,16 +424,29 @@ function dragula (initialContainers, options) {
     if (_mirror) {
       return;
     }
-    var rect = _item.getBoundingClientRect();
-    _mirror = _item.cloneNode(true);
-    _mirror.style.width = getRectWidth(rect) + 'px';
-    _mirror.style.height = getRectHeight(rect) + 'px';
-    classes.rm(_mirror, 'gu-transit');
+
+    _mirror = o.createMirror(_item);
+    if (!_mirror) {
+      _mirror = createDefaultMirrorImage(_item);
+    }
+    if (_mirror.className &&
+        _mirror.className.indexOf('gu-transit') > -1) {
+      classes.rm(_mirror, 'gu-transit');
+    }
+
     classes.add(_mirror, 'gu-mirror');
     o.mirrorContainer.appendChild(_mirror);
     touchy(documentElement, 'add', 'mousemove', drag);
     classes.add(o.mirrorContainer, 'gu-unselectable');
     drake.emit('cloned', _mirror, _item, 'mirror');
+  }
+
+  function createDefaultMirrorImage (item) {
+    var rect = _item.getBoundingClientRect();
+    var mirror = item.cloneNode(true);
+    mirror.style.width = getRectWidth(rect) + 'px';
+    mirror.style.height = getRectHeight(rect) + 'px';
+    return mirror;
   }
 
   function removeMirrorImage () {
