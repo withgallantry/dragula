@@ -426,7 +426,7 @@ function dragula (initialContainers, options) {
     var rect = _item.getBoundingClientRect();
     _mirror = _item.cloneNode(true);
 
-    if (_mirror.shadowRoot) {
+    if (_item.shadowRoot) {
       _mirror.attachShadow(_item.shadowRoot);
       _mirror.shadowRoot.innerHTML = _item.shadowRoot.innerHTML;
     }
