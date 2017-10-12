@@ -27,6 +27,7 @@ function dragula (initialContainers, options) {
   var _grabbed; // holds mousedown context until first mousemove
 
   var o = options || {};
+  if (o.blankMirror === void 0) { o.blankMirror = false; }
   if (o.moves === void 0) { o.moves = always; }
   if (o.accepts === void 0) { o.accepts = always; }
   if (o.invalid === void 0) { o.invalid = invalidTarget; }
@@ -424,7 +425,11 @@ function dragula (initialContainers, options) {
       return;
     }
     var rect = _item.getBoundingClientRect();
-    _mirror = _item.cloneNode(true);
+    if (o.blankMirror) {
+      _mirror = document.createElement('div');
+    } else {
+      _mirror = _item.cloneNode(true);
+    }
 
     _mirror.style.width = getRectWidth(rect) + 'px';
     _mirror.style.height = getRectHeight(rect) + 'px';
