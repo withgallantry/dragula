@@ -167,7 +167,7 @@ function dragula(initialContainers, options) {
     eventualMovements(true);
     movements();
     end();
-    start(grabbed);
+    start(grabbed, e);
 
     var offset = getOffset(_item);
     _offsetX = getCoord('pageX', e) - offset.left;
@@ -225,7 +225,7 @@ function dragula(initialContainers, options) {
     }
   }
 
-  function start(context) {
+  function start(context, e) {
     if (isCopy(context.item, context.source)) {
       _copy = context.item.cloneNode(true);
       drake.emit('cloned', _copy, context.item, 'copy');
@@ -236,7 +236,7 @@ function dragula(initialContainers, options) {
     _initialSibling = _currentSibling = nextEl(context.item);
 
     drake.dragging = true;
-    drake.emit('drag', _item, _source);
+    drake.emit('drag', _item, _source, e);
   }
 
   function invalidTarget() {
