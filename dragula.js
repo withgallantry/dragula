@@ -174,7 +174,7 @@ function dragula(initialContainers, options) {
     _offsetY = getCoord('pageY', e) - offset.top;
 
     classes.add(_copy || _item, 'gu-transit');
-    renderMirrorImage();
+    renderMirrorImage(_offsetY);
     drag(e);
   }
 
@@ -460,7 +460,7 @@ function dragula(initialContainers, options) {
     }
   }
 
-  function renderMirrorImage() {
+  function renderMirrorImage(mouseTop) {
     if (_mirror) {
       return;
     }
@@ -478,7 +478,7 @@ function dragula(initialContainers, options) {
     o.mirrorContainer.appendChild(_mirror);
     touchy(documentElement, 'add', 'mousemove', drag);
     classes.add(o.mirrorContainer, 'gu-unselectable');
-    drake.emit('cloned', _mirror, _item, 'mirror');
+    drake.emit('cloned', _mirror, _item, 'mirror', {mouseTop: mouseTop});
   }
 
   function removeMirrorImage() {
