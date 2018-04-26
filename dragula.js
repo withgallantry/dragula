@@ -615,9 +615,18 @@ function getElementBehindPoint(point, x, y) {
   // Traverses any shadow root to find the deepest element.
   function elementFromPoint(x, y) {
     var el = doc.elementFromPoint(x, y);
+
     var maybeElem;
+    var i = 0;
     while (el && el.shadowRoot && el.shadowRoot.elementFromPoint) {
       maybeElem = el.shadowRoot.elementFromPoint(x, y);
+      if (maybeElem === el) {
+        i++;
+      }
+      if (i > 3) {
+        i = 0;
+        break;
+      }
       if (maybeElem) {
         el = maybeElem;
       } else {
