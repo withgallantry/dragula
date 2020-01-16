@@ -32,7 +32,8 @@
   "homepage": "https://github.com/bevacqua/dragula",
   "dependencies": {
     "contra": "1.9.4",
-    "crossvent": "1.5.4"
+    "crossvent": "1.5.4",
+    "npm-watch": "^0.6.0"
   },
   "devDependencies": {
     "bower": "1.5.2",
