@@ -53,7 +53,9 @@
   },
   "watch": {
     "scripts-no-lint": {
-      "patterns": ["."],
+      "patterns": [
+        "."
+      ],
       "extensions": "js",
       "ignore": "dist/*.js"
     }
