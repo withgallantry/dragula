@@ -579,10 +579,10 @@ function getReference(dropTarget, target, x, y) {
   function resolve(after) {
     return after ? nextEl(target) : target;
   }
-}
 
-function isCopy(item, container) {
-  return typeof o.copy === 'boolean' ? o.copy : o.copy(item, container);
+  function isCopy(item, container) {
+    return typeof o.copy === 'boolean' ? o.copy : o.copy(item, container);
+  }
 }
 
 function touchy(el, op, type, fn) {
