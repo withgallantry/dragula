@@ -444,7 +444,7 @@ function dragula(initialContainers, options) {
       var isPositive;
       if (referenceRect) {
         isPositive = direct === 'horizontal' ? (itemRect.x < referenceRect.x) : (itemRect.y < referenceRect.y);
-      }else{
+      } else {
         isPositive = true;
       }
       // mover is the element to be exchange passively
@@ -468,6 +468,7 @@ function dragula(initialContainers, options) {
       }
       drake.emit('shadow', item, dropTarget, _source);
     }
+
     function moved(type) {
       drake.emit(type, item, _lastDropTarget, _source);
     }
@@ -506,83 +507,82 @@ function dragula(initialContainers, options) {
       _mirror = _item.cloneNode(true);
     }
 
-      classes.rm(_mirror, 'gu-transit');
-    }
-
-    classes.add(_mirror, 'gu-mirror');
-    o.mirrorContainer.appendChild(_mirror);
-    touchy(documentElement, 'add', 'mousemove', drag);
-    classes.add(o.mirrorContainer, 'gu-unselectable');
-    drake.emit('cloned', _mirror, _item, 'mirror', {mouseTop: mouseTop});
+    classes.rm(_mirror, 'gu-transit');
   }
 
-  function createDefaultMirrorImage (item) {
-    var rect = _item.getBoundingClientRect();
-    var mirror = item.cloneNode(true);
-    mirror.style.width = getRectWidth(rect) + 'px';
-    mirror.style.height = getRectHeight(rect) + 'px';
-    return mirror;
+  classes.add(_mirror, 'gu-mirror');
+  o.mirrorContainer.appendChild(_mirror);
+  touchy(documentElement, 'add', 'mousemove', drag);
+  classes.add(o.mirrorContainer, 'gu-unselectable');
+  drake.emit('cloned', _mirror, _item, 'mirror', {mouseTop: mouseTop});
+}
+
+function createDefaultMirrorImage(item) {
+  var rect = _item.getBoundingClientRect();
+  var mirror = item.cloneNode(true);
+  mirror.style.width = getRectWidth(rect) + 'px';
+  mirror.style.height = getRectHeight(rect) + 'px';
+  return mirror;
+}
+
+function removeMirrorImage() {
+  if (_mirror) {
+    classes.rm(o.mirrorContainer, 'gu-unselectable');
+    touchy(documentElement, 'remove', 'mousemove', drag);
+    getParent(_mirror).removeChild(_mirror);
+    _mirror = null;
   }
+}
 
-  function removeMirrorImage() {
-    if (_mirror) {
-      classes.rm(o.mirrorContainer, 'gu-unselectable');
-      touchy(documentElement, 'remove', 'mousemove', drag);
-      getParent(_mirror).removeChild(_mirror);
-      _mirror = null;
-    }
+function getImmediateChild(dropTarget, target) {
+  var immediate = target;
+  while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
+    immediate = getParent(immediate);
   }
-
-  function getImmediateChild(dropTarget, target) {
-    var immediate = target;
-    while (immediate !== dropTarget && getParent(immediate) !== dropTarget) {
-      immediate = getParent(immediate);
-    }
-    if (immediate === documentElement) {
-      return null;
-    }
-    return immediate;
+  if (immediate === documentElement) {
+    return null;
   }
+  return immediate;
+}
 
-  function getReference(dropTarget, target, x, y) {
-    var horizontal = o.direction === 'horizontal';
-    var reference = target !== dropTarget ? inside() : outside();
-    return reference;
+function getReference(dropTarget, target, x, y) {
+  var horizontal = o.direction === 'horizontal';
+  var reference = target !== dropTarget ? inside() : outside();
+  return reference;
 
-    function outside() { // slower, but able to figure out any position
-      var len = dropTarget.children.length;
-      var i;
-      var el;
-      var rect;
-      for (i = 0; i < len; i++) {
-        el = dropTarget.children[i];
-        rect = el.getBoundingClientRect();
-        if (horizontal && (rect.left + rect.width / 2) > x) {
-          return el;
-        }
-        if (!horizontal && (rect.top + rect.height / 2) > y) {
-          return el;
-        }
+  function outside() { // slower, but able to figure out any position
+    var len = dropTarget.children.length;
+    var i;
+    var el;
+    var rect;
+    for (i = 0; i < len; i++) {
+      el = dropTarget.children[i];
+      rect = el.getBoundingClientRect();
+      if (horizontal && (rect.left + rect.width / 2) > x) {
+        return el;
       }
-      return null;
-    }
-
-    function inside() { // faster, but only available if dropped inside a child element
-      var rect = target.getBoundingClientRect();
-      if (horizontal) {
-        return resolve(x > rect.left + getRectWidth(rect) / 2);
+      if (!horizontal && (rect.top + rect.height / 2) > y) {
+        return el;
       }
-      return resolve(y > rect.top + getRectHeight(rect) / 2);
     }
-
-    function resolve(after) {
-      return after ? nextEl(target) : target;
-    }
+    return null;
   }
 
-  function isCopy(item, container) {
-    return typeof o.copy === 'boolean' ? o.copy : o.copy(item, container);
+  function inside() { // faster, but only available if dropped inside a child element
+    var rect = target.getBoundingClientRect();
+    if (horizontal) {
+      return resolve(x > rect.left + getRectWidth(rect) / 2);
+    }
+    return resolve(y > rect.top + getRectHeight(rect) / 2);
   }
+
+  function resolve(after) {
+    return after ? nextEl(target) : target;
+  }
+}
+
+function isCopy(item, container) {
+  return typeof o.copy === 'boolean' ? o.copy : o.copy(item, container);
 }
 
 function touchy(el, op, type, fn) {
@@ -683,21 +683,27 @@ function getElementBehindPoint(point, x, y) {
 function never() {
   return false;
 }
+
 function always() {
   return true;
 }
+
 function getRectWidth(rect) {
   return rect.width || (rect.right - rect.left);
 }
+
 function getRectHeight(rect) {
   return rect.height || (rect.bottom - rect.top);
 }
+
 function getParent(el) {
   return el.parentNode === doc ? null : (el.host || el.parentNode);
 }
+
 function isInput(el) {
   return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || isEditable(el);
 }
+
 function isEditable(el) {
   if (!el) {
     return false;
@@ -713,6 +719,7 @@ function isEditable(el) {
 
 function nextEl(el) {
   return el.nextElementSibling || manually();
+
   function manually() {
     var sibling = el;
     do {
@@ -727,7 +734,7 @@ function nextEl(el) {
  * @param prevRect including element's position infomation before sorting
  * @param target element after sorting
  */
-function animate (prevRect, target) {
+function animate(prevRect, target) {
   if (!prevRect || !target) {
     return;
   }
