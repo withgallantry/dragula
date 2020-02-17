@@ -68,6 +68,10 @@ function dragula(initialContainers, options) {
     o.mirrorContainer = doc.body;
   }
 
+  if (o.animated === void 0) {
+    o.animated = false;
+  }
+
   var drake = emitter({
     containers: o.containers,
     start: manualStart,
@@ -462,7 +466,7 @@ function dragula(initialContainers, options) {
       }
       var moverRect = mover && mover.getBoundingClientRect();
       dropTarget.insertBefore(item, reference);
-      if (mover && moverRect) {
+      if (mover && moverRect && o.animated) {
         animate(moverRect, mover);
         animate(itemRect, item);
       }
